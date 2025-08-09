@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
 import toast from "react-hot-toast";
-import "./ProductCard.css";
 
 const ProductCard = ({ product, variants = [] }) => {
   const [selectedVariant, setSelectedVariant] = useState(variants[0] || null);
