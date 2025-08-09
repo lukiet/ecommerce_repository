@@ -127,18 +127,18 @@ const ProductShowcase = () => {
             <div className="row">
               <div className="col-md-6">
                 <ul className="list-unstyled">
-                  <li>✅ Responsive design across devices</li>
-                  <li>✅ Product images with loading states</li>
-                  <li>✅ Discount badges and pricing</li>
-                  <li>✅ Star ratings and review counts</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Responsive design across devices</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Product images with loading states</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Discount badges and pricing</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Star ratings and review counts</li>
                 </ul>
               </div>
               <div className="col-md-6">
                 <ul className="list-unstyled">
-                  <li>✅ Variant selection (size, color, etc.)</li>
-                  <li>✅ Stock management and warnings</li>
-                  <li>✅ Out of stock handling</li>
-                  <li>✅ Modern hover effects and animations</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Variant selection (size, color, etc.)</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Stock management and warnings</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Out of stock handling</li>
+                  <li className="mb-2"><i className="fas fa-check text-success me-2"></i>Modern hover effects and animations</li>
                 </ul>
               </div>
             </div>
@@ -158,11 +158,16 @@ const ProductShowcase = () => {
         
         <div className="row mt-5">
           <div className="col-12 text-center">
-            <h3 className="mb-3">Responsive Grid Layout</h3>
-            <p className="text-muted">
-              The cards automatically adjust to different screen sizes:<br/>
-              Desktop (3 columns) → Tablet (2 columns) → Mobile (1 column)
-            </p>
+            <div className="alert alert-info border-0 rounded-3 mx-auto" style={{ maxWidth: '600px' }}>
+              <h4 className="alert-heading">
+                <i className="fas fa-mobile-alt me-2"></i>
+                Responsive Grid Layout
+              </h4>
+              <p className="mb-0">
+                The cards automatically adapt to different screen sizes:<br/>
+                <strong>Desktop</strong> (3 columns) → <strong>Tablet</strong> (2 columns) → <strong>Mobile</strong> (1 column)
+              </p>
+            </div>
           </div>
         </div>
       </div>
