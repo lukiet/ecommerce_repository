@@ -60,16 +60,29 @@ const ProductCard = ({ product, variants = [] }) => {
 
   return (
     <div className="h-100">
-      <div className="card h-100 shadow-sm border-0 rounded-3 overflow-hidden position-relative" 
-           style={{ transition: 'all 0.3s ease' }}
-           onMouseEnter={(e) => {
-             e.currentTarget.style.transform = 'translateY(-8px)';
-             e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.15)';
-           }}
-           onMouseLeave={(e) => {
-             e.currentTarget.style.transform = 'translateY(0)';
-             e.currentTarget.style.boxShadow = '';
-           }}>
+      <div 
+        className="card h-100 shadow-sm border-0 rounded-3 overflow-hidden position-relative" 
+        style={{ transition: 'all 0.3s ease' }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-8px)';
+          e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.15)';
+          // Show quick view button
+          const quickViewBtn = e.currentTarget.querySelector('.quick-view-btn');
+          if (quickViewBtn) {
+            quickViewBtn.style.opacity = '1';
+            quickViewBtn.style.transform = 'scale(1)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '';
+          // Hide quick view button
+          const quickViewBtn = e.currentTarget.querySelector('.quick-view-btn');
+          if (quickViewBtn) {
+            quickViewBtn.style.opacity = '0';
+            quickViewBtn.style.transform = 'scale(0.8)';
+          }
+        }}>
         
         {/* Product Image Section */}
         <div className="position-relative bg-light d-flex align-items-center justify-content-center" 
@@ -98,7 +111,7 @@ const ProductCard = ({ product, variants = [] }) => {
           {/* Discount Badge */}
           {discountPercentage > 0 && (
             <div className="position-absolute top-0 start-0 m-3">
-              <span className="badge bg-danger rounded-pill px-2 py-1 fw-bold">
+              <span className="badge bg-danger rounded-pill px-2 py-1 fw-bold shadow-sm">
                 -{discountPercentage}%
               </span>
             </div>
@@ -107,27 +120,35 @@ const ProductCard = ({ product, variants = [] }) => {
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
             <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                 style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
-              <span className="text-white fw-bold text-uppercase ls-1">Out of Stock</span>
+                 style={{ backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 3 }}>
+              <span className="text-white fw-bold text-uppercase" style={{ letterSpacing: '1px' }}>
+                Out of Stock
+              </span>
             </div>
           )}
 
           {/* Quick View Button */}
           <Link 
             to={`/product/${product.id || product._id}`} 
-            className="position-absolute top-0 end-0 m-3 btn btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center opacity-0"
+            className="position-absolute top-0 end-0 m-3 btn btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center quick-view-btn"
             style={{ 
               width: '40px', 
               height: '40px',
-              transition: 'opacity 0.3s ease, transform 0.3s ease',
-              backdropFilter: 'blur(8px)'
+              opacity: '0',
+              transform: 'scale(0.8)',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(8px)',
+              zIndex: 2
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1)';
               e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.color = '#007bff';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.backgroundColor = '';
+              e.currentTarget.style.color = '';
+              e.currentTarget.style.boxShadow = '';
             }}
             aria-label="Quick view product">
             <i className="fas fa-eye"></i>
@@ -183,7 +204,18 @@ const ProductCard = ({ product, variants = [] }) => {
                 id={`variant-${product.id}`}
                 className="form-select form-select-sm"
                 value={selectedVariant?.id || ''}
-                onChange={handleVariantChange}>
+                onChange={handleVariantChange}
+                style={{ 
+                  transition: 'border-color 0.3s ease, box-shadow 0.3s ease' 
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#007bff';
+                  e.target.style.boxShadow = '0 0 0 0.2rem rgba(0, 123, 255, 0.25)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '';
+                  e.target.style.boxShadow = '';
+                }}>
                 {variants.map((variant) => (
                   <option 
                     key={variant.id} 
@@ -202,7 +234,7 @@ const ProductCard = ({ product, variants = [] }) => {
               ${getCurrentPrice()}
             </span>
             {product.cuttedPrice && product.cuttedPrice > getCurrentPrice() && (
-              <span className="text-muted text-decoration-line-through">
+              <span className="text-muted text-decoration-line-through h6 mb-0">
                 ${product.cuttedPrice}
               </span>
             )}
@@ -210,7 +242,8 @@ const ProductCard = ({ product, variants = [] }) => {
 
           {/* Stock Info */}
           {getCurrentStock() <= 5 && getCurrentStock() > 0 && (
-            <div className="alert alert-warning py-2 px-3 mb-3 small text-center">
+            <div className="alert alert-warning py-2 px-3 mb-3 small text-center border-0">
+              <i className="fas fa-exclamation-triangle me-1"></i>
               Only {getCurrentStock()} left in stock!
             </div>
           )}
@@ -220,7 +253,18 @@ const ProductCard = ({ product, variants = [] }) => {
             <Link
               to={`/product/${product.id || product._id}`}
               className="btn btn-outline-primary btn-sm flex-fill d-flex align-items-center justify-content-center gap-1"
-              style={{ minHeight: '44px' }}>
+              style={{ 
+                minHeight: '44px',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(0, 123, 255, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '';
+              }}>
               <i className="fas fa-eye"></i>
               View Details
             </Link>
@@ -237,7 +281,18 @@ const ProductCard = ({ product, variants = [] }) => {
               <button
                 className="btn btn-primary btn-sm flex-fill d-flex align-items-center justify-content-center gap-1"
                 onClick={() => addProduct(product)}
-                style={{ minHeight: '44px' }}>
+                style={{ 
+                  minHeight: '44px',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-1px)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0, 123, 255, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '';
+                }}>
                 <i className="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
